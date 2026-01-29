@@ -1,0 +1,25 @@
+﻿@model Project2EmailNight.Entities.Message
+
+@{
+    Layout = null;
+}
+
+<link href="~/lib/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet" />
+
+<div class="container">
+    <form method="post">
+        <br /><br>
+        <label>Alıcı Email</label>
+        <input type="text" class="form-control" asp-for="ReceiverEmail" />
+        <br />
+        <label>Konu</label>
+        <input type="text" class="form-control" asp-for="Subject" />
+        <br />
+        <label>Mesaj</label>
+        <input type="text" class="form-control" asp-for="MessageDetail" />
+        <br />
+
+        <button class="btn btn-primary">Mesajı Gönder</button>
+
+    </form>
+</div>

@@ -28,8 +28,21 @@ namespace Project2EmailNight.Controllers
                 UserName = userRegisterDto.Username,
                 Email = userRegisterDto.Email,
             };
-            await _userManager.CreateAsync(appUser,userRegisterDto.Password);
-            return RedirectToAction("UserList");
+            var result = await _userManager.CreateAsync(appUser,userRegisterDto.Password);
+
+            if (result.Succeeded)
+            {
+                return RedirectToAction("UserList");
+            }
+            else
+            {
+                foreach (var item in result.Errors)
+                {
+                    ModelState.AddModelError("", item.Description);
+                }
+            }
+
+            return View();
         }
     }
 }

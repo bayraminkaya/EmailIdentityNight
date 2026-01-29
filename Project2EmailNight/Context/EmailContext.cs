@@ -10,5 +10,7 @@ namespace Project2EmailNight.Context
         {
             optionsBuilder.UseSqlServer("Server=DESKTOP-5V6MJ7S;initial catalog=Project2EmailNightDb;integrated security=true;trust server certificate=true");
         }
+
+        public DbSet<Message> Messages { get; set; }
     }
 }
