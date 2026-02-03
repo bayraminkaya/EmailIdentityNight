@@ -27,7 +27,7 @@ namespace Project2EmailNight.Controllers
             var result = await _signInManager.PasswordSignInAsync(userLoginDto.Username, userLoginDto.Password, true, false);
             if (result.Succeeded) 
             {
-                return RedirectToAction("Profile");
+                return RedirectToAction("Index","Profile");
             }
 
             return View();

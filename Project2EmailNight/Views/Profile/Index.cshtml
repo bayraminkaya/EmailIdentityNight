@@ -1,0 +1,25 @@
+﻿@model Project2EmailNight.Dtos.UserEditDto
+@{
+    Layout = null;
+}
+
+<link href="~/lib/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet" />
+
+<div class="container">
+    <br /><br />
+    <form method="post" enctype="multipart/form-data">
+        <input type="text" class="form-control" asp-for="Name" placeholder="Adınız"/>
+        <br />
+        <input type="text" class="form-control" asp-for="Surname" placeholder="Soyadınız" />
+        <br />
+        <input type="text" class="form-control" asp-for="Email" placeholder="Email Adresi" />
+        <br />
+        <input type="file" class="form-control" asp-for="Image" placeholder="Görsel Url" />
+        <br />
+        <input type="text" class="form-control" asp-for="Password" placeholder="Şifreniz" />
+        <br />
+        <div class="text-danger" asp-validation-summary="ModelOnly"></div>
+        <button class="btn btn-info">Bilgileri Kaydet</button>
+
+    </form>
+</div>
