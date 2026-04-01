@@ -1,21 +1,129 @@
 ﻿@model Project2EmailNight.Dtos.UserLoginDto
-
 @{
     Layout = null;
 }
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <title>Giriş Yap</title>
+    <link rel="icon" href="~/vertical/assets/images/favicon-32x32.png" type="image/png" />
+    <link href="~/vertical/assets/css/pace.min.css" rel="stylesheet" />
+    <script src="~/vertical/assets/js/pace.min.js"></script>
+    <link rel="stylesheet" href="~/vertical/assets/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;600&family=Roboto&display=swap" />
+    <link rel="stylesheet" href="~/vertical/assets/css/icons.css" />
+    <link rel="stylesheet" href="~/vertical/assets/css/app.css" />
+</head>
+<body class="bg-login">
+    <div class="wrapper">
+        <div class="section-authentication-login d-flex align-items-center justify-content-center mt-4">
+            <div class="row">
+                <div class="col-12 col-lg-8 mx-auto">
+                    <div class="card radius-15 overflow-hidden">
+                        <div class="row g-0">
 
-<link href="~/lib/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet" />
+                            <!-- SOL: FORM -->
+                            <div class="col-xl-6">
+                                <div class="card-body p-5">
+                                    <div class="text-center">
+                                        <img src="~/vertical/assets/images/logo-icon.png" width="80" alt="">
+                                        <h3 class="mt-4 font-weight-bold">Tekrar Hoş Geldiniz</h3>
+                                    </div>
 
-<div class="container">
-    <form method="post">
-        <br /><br>
-        <label>Kullanıcı Adınız</label>
-        <input type="text" class="form-control" asp-for="Username" />
-        <br />
-        <label>Şifreniz</label>
-        <input type="text" class="form-control" required asp-for="Password" />
-        <br />
-        <button class="btn btn-primary">Giriş Yap</button>
+                                    <!-- Hata mesajları -->
+                                    @if (!ViewData.ModelState.IsValid)
+                                    {
+                                        <div class="alert alert-danger mt-3">
+                                            @foreach (var error in ViewData.ModelState.Values.SelectMany(v => v.Errors))
+                                            {
+                                                <div>@error.ErrorMessage</div>
+                                            }
+                                        </div>
+                                    }
 
-    </form>
-</div>
+                                    <div class="form-body mt-2">
+                                        <form class="row g-3" method="post">
+                                            @Html.AntiForgeryToken()
+
+                                            <!-- Kullanıcı Adı -->
+                                            <div class="col-12">
+                                                <label class="form-label">Kullanıcı Adı</label>
+                                                <input type="text" class="form-control" asp-for="Username" placeholder="Kullanıcı adınız">
+                                            </div>
+
+                                            <!-- Şifre -->
+                                            <div class="col-12">
+                                                <label class="form-label">Şifre</label>
+                                                <div class="input-group" id="show_hide_password">
+                                                    <input type="password" class="form-control border-end-0" asp-for="Password" placeholder="Şifreniz">
+                                                    <a href="javascript:;" class="input-group-text bg-transparent">
+                                                        <i class="bx bx-hide"></i>
+                                                    </a>
+                                                </div>
+                                            </div>
+
+                                            <!-- Beni Hatırla -->
+                                            <div class="col-md-6">
+                                                <div class="form-check form-switch">
+                                                    <input class="form-check-input" type="checkbox" id="rememberMe" checked>
+                                                    <label class="form-check-label" for="rememberMe">Beni Hatırla</label>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6 text-end">
+                                                <a href="@Url.Action("ForgotPassword", "Password")">Şifremi Unuttum?</a>
+                                            </div>
+
+                                            <!-- Giriş Butonu -->
+                                            <div class="col-12">
+                                                <div class="d-grid">
+                                                    <button type="submit" class="btn btn-primary">
+                                                        <i class="bx bxs-lock-open me-1"></i>Giriş Yap
+                                                    </button>
+                                                </div>
+                                            </div>
+
+                                            <!-- Kayıt ol linki -->
+                                            <div class="col-12 text-center">
+                                                <p>
+                                                    Hesabınız yok mu?
+                                                    <a href="@Url.Action("CreateUser", "Register")">Kayıt olun</a>
+                                                </p>
+                                            </div>
+
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- SAĞ: GÖRSEL -->
+                            <div class="col-xl-6 bg-login-color d-flex align-items-center justify-content-center">
+                                <img src="~/vertical/assets/images/login-images/login-frent-img.jpg" class="img-fluid" alt="">
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="~/vertical/assets/js/jquery.min.js"></script>
+    <script src="~/vertical/assets/js/bootstrap.bundle.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            $("#show_hide_password a").on('click', function (event) {
+                event.preventDefault();
+                if ($('#show_hide_password input').attr("type") == "text") {
+                    $('#show_hide_password input').attr('type', 'password');
+                    $('#show_hide_password i').addClass("bx-hide").removeClass("bx-show");
+                } else {
+                    $('#show_hide_password input').attr('type', 'text');
+                    $('#show_hide_password i').removeClass("bx-hide").addClass("bx-show");
+                }
+            });
+        });
+    </script>
+</body>
+</html>

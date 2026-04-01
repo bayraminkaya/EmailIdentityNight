@@ -1,0 +1,99 @@
+﻿@model Project2EmailNight.Dtos.VerifyEmailDto
+@{
+    Layout = null;
+}
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <title>E-Posta Doğrulama</title>
+    <link rel="icon" href="~/vertical/assets/images/favicon-32x32.png" type="image/png" />
+    <link href="~/vertical/assets/css/pace.min.css" rel="stylesheet" />
+    <script src="~/vertical/assets/js/pace.min.js"></script>
+    <link rel="stylesheet" href="~/vertical/assets/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;600&family=Roboto&display=swap" />
+    <link rel="stylesheet" href="~/vertical/assets/css/icons.css" />
+    <link rel="stylesheet" href="~/vertical/assets/css/app.css" />
+</head>x
+<body>
+    <div class="wrapper">
+        <div class="authentication-reset-password d-flex align-items-center justify-content-center">
+            <div class="row">
+                <div class="col-12 col-lg-10 mx-auto">
+                    <div class="card radius-15">
+                        <div class="row g-0">
+
+                            <!-- SOL: FORM -->
+                            <div class="col-lg-5">
+                                <div class="card-body p-md-5">
+                                    <div class="text-left">
+                                        <img src="~/vertical/assets/images/logo-img.png" width="180" alt="">
+                                    </div>
+
+                                    <h4 class="mt-5 font-weight-bold">E-Posta Doğrulama</h4>
+                                    <p class="text-muted">
+                                        <i class="bx bx-envelope me-1"></i>
+                                        <strong>@Model.Email</strong> adresine gönderilen 6 haneli doğrulama kodunu giriniz.
+                                    </p>
+
+                                    <!-- Hata mesajları -->
+                                    @if (!ViewData.ModelState.IsValid)
+                                    {
+                                        <div class="alert alert-danger">
+                                            @foreach (var error in ViewData.ModelState.Values.SelectMany(v => v.Errors))
+                                            {
+                                                <div>@error.ErrorMessage</div>
+                                            }
+                                        </div>
+                                    }
+
+                                    <form method="post" class="mt-4">
+                                        @Html.AntiForgeryToken()
+
+                                        <!-- UserId gizli alan -->
+                                        <input type="hidden" asp-for="UserId" />
+
+                                        <!-- Email readonly -->
+                                        <div class="mb-3">
+                                            <label class="form-label">E-Posta Adresi</label>
+                                            <input type="email" class="form-control bg-light" asp-for="Email" readonly />
+                                        </div>
+
+                                        <!-- Doğrulama Kodu -->
+                                        <div class="mb-3">
+                                            <label class="form-label">Doğrulama Kodu</label>
+                                            <input type="text" class="form-control" asp-for="ConfirmCode"
+                                                   placeholder="6 haneli kodu giriniz" maxlength="6" />
+                                        </div>
+
+                                        <div class="d-grid gap-2">
+                                            <button type="submit" class="btn btn-primary">
+                                                <i class="bx bx-check me-1"></i>Doğrula
+                                            </button>
+                                            <a href="@Url.Action("CreateUser", "Register")" class="btn btn-light">
+                                                <i class="bx bx-arrow-back me-1"></i>Kayıt Sayfasına Dön
+                                            </a>
+                                        </div>
+
+                                    </form>
+                                </div>
+                            </div>
+
+                            <!-- SAĞ: GÖRSEL -->
+                            <div class="col-lg-7">
+                                <img src="~/vertical/assets/images/login-images/forgot-password-frent-img.jpg"
+                                     class="card-img login-img h-100" alt="">
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="~/vertical/assets/js/jquery.min.js"></script>
+    <script src="~/vertical/assets/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
