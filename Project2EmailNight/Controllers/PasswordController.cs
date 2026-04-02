@@ -10,10 +10,12 @@ namespace Project2EmailNight.Controllers
     public class PasswordController : Controller
     {
         private readonly UserManager<AppUser> _userManager;
+        private readonly IConfiguration _configuration;
 
-        public PasswordController(UserManager<AppUser> userManager)
+        public PasswordController(UserManager<AppUser> userManager, IConfiguration configuration)
         {
             _userManager = userManager;
+            _configuration = configuration;
         }
 
         [HttpGet]
@@ -26,26 +28,24 @@ namespace Project2EmailNight.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> ForgotPassword(ForgotPasswordDto dto)
         {
-
             var user = await _userManager.FindByEmailAsync(dto.Email);
-
             if (user == null)
             {
-
                 ModelState.AddModelError("", "Eğer bu email kayıtlıysa sıfırlama linki gönderildi.");
                 return View(dto);
             }
 
-
             var token = await _userManager.GeneratePasswordResetTokenAsync(user);
-
-
             var resetLink = Url.Action("ResetPassword", "Password",
                 new { email = user.Email, token = token },
                 Request.Scheme);
 
+            var senderEmail = _configuration["EmailSettings:SenderEmail"];
+            var senderName = _configuration["EmailSettings:SenderName"];
+            var appPassword = _configuration["EmailSettings:AppPassword"];
+
             MimeMessage mimeMessage = new MimeMessage();
-            mimeMessage.From.Add(new MailboxAddress("Identity Admin", "pawpuffzone@gmail.com"));
+            mimeMessage.From.Add(new MailboxAddress(senderName, senderEmail));
             mimeMessage.To.Add(new MailboxAddress("User", user.Email));
             mimeMessage.Subject = "Şifre Sıfırlama Talebi";
 
@@ -55,14 +55,13 @@ namespace Project2EmailNight.Controllers
 
             SmtpClient smtpClient = new SmtpClient();
             smtpClient.Connect("smtp.gmail.com", 587, false);
-            smtpClient.Authenticate("pawpuffzone@gmail.com", "ipkb lbdc gzyx mrqr");
+            smtpClient.Authenticate(senderEmail, appPassword);
             smtpClient.Send(mimeMessage);
             smtpClient.Disconnect(true);
 
             ViewBag.Message = "Şifre sıfırlama linki email adresinize gönderildi.";
             return View(dto);
         }
-
 
         [HttpGet]
         public IActionResult ResetPassword(string email, string token)
@@ -90,7 +89,6 @@ namespace Project2EmailNight.Controllers
                 return RedirectToAction("UserLogin", "Login");
 
             var result = await _userManager.ResetPasswordAsync(user, dto.Token, dto.NewPassword);
-
             if (result.Succeeded)
             {
                 return RedirectToAction("UserLogin", "Login");

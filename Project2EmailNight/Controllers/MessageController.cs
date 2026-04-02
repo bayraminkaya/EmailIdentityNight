@@ -9,6 +9,7 @@ namespace Project2EmailNight.Controllers
     {
         private readonly EmailContext _context;
         private readonly UserManager<AppUser> _userManager;
+
         public MessageController(EmailContext context, UserManager<AppUser> userManager)
         {
             _context = context;
@@ -22,19 +23,39 @@ namespace Project2EmailNight.Controllers
         }
 
         [HttpPost]
-        public IActionResult CreateMessage(Message message)
+        public async Task<IActionResult> CreateMessage(Message message)
         {
+            var user = await _userManager.FindByNameAsync(User.Identity.Name);
+            message.SenderEMail = user.Email;
             message.SendDate = DateTime.Now;
             message.IsStatus = false;
             _context.Messages.Add(message);
             _context.SaveChanges();
-            return RedirectToAction("Sendbox");
+            return RedirectToAction("Inbox");
         }
 
         public async Task<IActionResult> Inbox()
         {
             var user = await _userManager.FindByNameAsync(User.Identity.Name);
-            var messageList = _context.Messages.Where(x => x.ReceiverEmail == user.Email).ToList();
+            var messageList = _context.Messages
+                .Where(x => x.ReceiverEmail == user.Email)
+                .OrderByDescending(x => x.SendDate)
+                .ToList();
+
+            // Üst panelde kullanıcı bilgisi için
+            ViewBag.CurrentUser = user;
+
+            return View(messageList);
+        }
+
+        public async Task<IActionResult> Sendbox()
+        {
+            var user = await _userManager.FindByNameAsync(User.Identity.Name);
+            var messageList = _context.Messages
+                .Where(x => x.SenderEMail == user.Email)
+                .OrderByDescending(x => x.SendDate)
+                .ToList();
+            ViewBag.CurrentUser = user;
             return View(messageList);
         }
     }

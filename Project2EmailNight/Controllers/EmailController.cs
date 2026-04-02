@@ -7,6 +7,13 @@ namespace Project2EmailNight.Controllers
 {
     public class EmailController : Controller
     {
+        private readonly IConfiguration _configuration;
+
+        public EmailController(IConfiguration configuration)
+        {
+            _configuration = configuration;
+        }
+
         public IActionResult SendEmail()
         {
             return View();
@@ -15,14 +22,13 @@ namespace Project2EmailNight.Controllers
         [HttpPost]
         public IActionResult SendEmail(MailRequestDto mailRequestDto)
         {
+            var senderEmail = _configuration["EmailSettings:SenderEmail"];
+            var senderName = _configuration["EmailSettings:SenderName"];
+            var appPassword = _configuration["EmailSettings:AppPassword"];
+
             MimeMessage mimeMessage = new MimeMessage();
-
-            MailboxAddress mailboxAddressFrom = new MailboxAddress("Identity Admin", "pawpuffzone@gmail.com");
-            mimeMessage.From.Add(mailboxAddressFrom);
-
-            MailboxAddress mailboxAddressTo = new MailboxAddress("User", mailRequestDto.ReceiverEmail);
-            mimeMessage.To.Add(mailboxAddressTo);
-
+            mimeMessage.From.Add(new MailboxAddress(senderName, senderEmail));
+            mimeMessage.To.Add(new MailboxAddress("User", mailRequestDto.ReceiverEmail));
             mimeMessage.Subject = mailRequestDto.Subject;
 
             var bodyBuilder = new BodyBuilder();
@@ -31,7 +37,7 @@ namespace Project2EmailNight.Controllers
 
             SmtpClient smtpClient = new SmtpClient();
             smtpClient.Connect("smtp.gmail.com", 587, false);
-            smtpClient.Authenticate("pawpuffzone@gmail.com", "ipkb lbdc gzyx mrqr");
+            smtpClient.Authenticate(senderEmail, appPassword);
             smtpClient.Send(mimeMessage);
             smtpClient.Disconnect(true);
 
