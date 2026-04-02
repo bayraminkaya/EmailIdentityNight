@@ -53,5 +53,11 @@ namespace Project2EmailNight.Controllers
             ModelState.AddModelError("", "Kullanıcı adı veya şifre hatalı.");
             return View(userLoginDto);
         }
+
+        public async Task<IActionResult> Logout()
+        {
+            await _signInManager.SignOutAsync();
+            return RedirectToAction("UserLogin", "Login");
+        }
     }
 }

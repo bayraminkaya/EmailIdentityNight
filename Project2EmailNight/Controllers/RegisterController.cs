@@ -10,10 +10,12 @@ namespace Project2EmailNight.Controllers
     public class RegisterController : Controller
     {
         private readonly UserManager<AppUser> _userManager;
+        private readonly IConfiguration _configuration;
 
-        public RegisterController(UserManager<AppUser> userManager)
+        public RegisterController(UserManager<AppUser> userManager, IConfiguration configuration)
         {
             _userManager = userManager;
+            _configuration = configuration;
         }
 
         [HttpGet]
@@ -26,7 +28,6 @@ namespace Project2EmailNight.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> CreateUser(UserRegisterDto userRegisterDto)
         {
-            // 6 haneli rastgele kod üret
             var random = new Random();
             string confirmCode = random.Next(100000, 999999).ToString();
 
@@ -43,13 +44,13 @@ namespace Project2EmailNight.Controllers
 
             if (result.Succeeded)
             {
-                // Email gönder
-                MimeMessage mimeMessage = new MimeMessage();
-                MailboxAddress mailboxAddressFrom = new MailboxAddress("Identity Admin", "pawpuffzone@gmail.com");
-                mimeMessage.From.Add(mailboxAddressFrom);
-                MailboxAddress mailboxAddressTo = new MailboxAddress("User", userRegisterDto.Email);
-                mimeMessage.To.Add(mailboxAddressTo);
+                var senderEmail = _configuration["EmailSettings:SenderEmail"];
+                var senderName = _configuration["EmailSettings:SenderName"];
+                var appPassword = _configuration["EmailSettings:AppPassword"];
 
+                MimeMessage mimeMessage = new MimeMessage();
+                mimeMessage.From.Add(new MailboxAddress(senderName, senderEmail));
+                mimeMessage.To.Add(new MailboxAddress("User", userRegisterDto.Email));
                 mimeMessage.Subject = "E-Posta Doğrulama Kodunuz";
 
                 var bodyBuilder = new BodyBuilder();
@@ -58,7 +59,7 @@ namespace Project2EmailNight.Controllers
 
                 SmtpClient smtpClient = new SmtpClient();
                 smtpClient.Connect("smtp.gmail.com", 587, false);
-                smtpClient.Authenticate("pawpuffzone@gmail.com", "ipkb lbdc gzyx mrqr");
+                smtpClient.Authenticate(senderEmail, appPassword);
                 smtpClient.Send(mimeMessage);
                 smtpClient.Disconnect(true);
 

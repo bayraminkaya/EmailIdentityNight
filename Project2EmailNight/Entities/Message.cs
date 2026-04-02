@@ -9,5 +9,8 @@
         public string MessageDetail { get; set; }
         public bool IsStatus { get; set; }
         public DateTime SendDate { get; set; }
+        public bool IsStarred { get; set; }
+        public string? Category { get; set; }
+        public bool IsDeleted { get; set; }
     }
 }

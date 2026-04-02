@@ -1,25 +1,598 @@
 ﻿@model Project2EmailNight.Dtos.UserEditDto
 @{
     Layout = null;
+    var user = ViewBag.CurrentUser as Project2EmailNight.Entities.AppUser;
+    var avatarLetter = user?.Name?.Length > 0 ? user.Name[0].ToString().ToUpper() : "?";
 }
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <title>Profilim — Syndash</title>
+    <link rel="icon" href="~/vertical/assets/images/favicon-32x32.png" type="image/png" />
+    <link rel="stylesheet" href="~/vertical/assets/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" />
+    <link rel="stylesheet" href="~/vertical/assets/css/icons.css" />
+    <link rel="stylesheet" href="~/vertical/assets/css/app.css" />
+    <style>
+        * {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif !important;
+        }
 
-<link href="~/lib/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet" />
+        .sidebar-wrapper {
+            display: none !important;
+        }
 
-<div class="container">
-    <br /><br />
-    <form method="post" enctype="multipart/form-data">
-        <input type="text" class="form-control" asp-for="Name" placeholder="Adınız"/>
-        <br />
-        <input type="text" class="form-control" asp-for="Surname" placeholder="Soyadınız" />
-        <br />
-        <input type="text" class="form-control" asp-for="Email" placeholder="Email Adresi" />
-        <br />
-        <input type="file" class="form-control" asp-for="Image" placeholder="Görsel Url" />
-        <br />
-        <input type="text" class="form-control" asp-for="Password" placeholder="Şifreniz" />
-        <br />
-        <div class="text-danger" asp-validation-summary="ModelOnly"></div>
-        <button class="btn btn-info">Bilgileri Kaydet</button>
+        body {
+            background: #f8fafc !important;
+            margin: 0;
+        }
 
-    </form>
-</div>
+        .page-wrapper {
+            margin-left: 0 !important;
+            margin-top: 64px !important;
+            padding: 24px !important;
+        }
+
+        .page-content-wrapper, .page-content {
+            padding: 0 !important;
+            margin: 0 !important;
+        }
+
+        /* HEADER */
+        .top-header {
+            left: 0 !important;
+            width: 100% !important;
+            background: #fff !important;
+            border-bottom: 1px solid #e2e8f0;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.04);
+            height: 64px;
+            z-index: 100;
+        }
+
+            .top-header .navbar {
+                height: 64px;
+            }
+
+        .logo-text {
+            font-weight: 700 !important;
+            font-size: 20px !important;
+            background: linear-gradient(135deg, #7c3aed, #a855f7);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .user-box .user-name {
+            font-weight: 600;
+            font-size: 13.5px;
+            color: #1e293b;
+        }
+
+        .user-box .designattion {
+            font-size: 11px;
+            color: #94a3b8;
+        }
+
+        .user-box .user-img {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            border: 2px solid #e2e8f0;
+        }
+
+        /* ===== STAT WIDGETS ===== */
+        .stat-card {
+            background: #fff;
+            border-radius: 16px;
+            padding: 20px;
+            border: 1px solid #f1f5f9;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+            transition: all 0.25s;
+            position: relative;
+            overflow: hidden;
+        }
+
+            .stat-card::before {
+                content: '';
+                position: absolute;
+                top: 0;
+                left: 0;
+                right: 0;
+                height: 3px;
+                border-radius: 16px 16px 0 0;
+            }
+
+            .stat-card:hover {
+                transform: translateY(-3px);
+                box-shadow: 0 8px 25px rgba(0,0,0,0.08);
+                border-color: transparent;
+            }
+
+            .stat-card.purple::before {
+                background: linear-gradient(90deg, #7c3aed, #a855f7);
+            }
+
+            .stat-card.blue::before {
+                background: linear-gradient(90deg, #3b82f6, #60a5fa);
+            }
+
+            .stat-card.green::before {
+                background: linear-gradient(90deg, #22c55e, #4ade80);
+            }
+
+            .stat-card.red::before {
+                background: linear-gradient(90deg, #ef4444, #f87171);
+            }
+
+            .stat-card.amber::before {
+                background: linear-gradient(90deg, #f59e0b, #fbbf24);
+            }
+
+            .stat-card.teal::before {
+                background: linear-gradient(90deg, #14b8a6, #2dd4bf);
+            }
+
+            .stat-card.pink::before {
+                background: linear-gradient(90deg, #ec4899, #f472b6);
+            }
+
+            .stat-card.slate::before {
+                background: linear-gradient(90deg, #64748b, #94a3b8);
+            }
+
+        .stat-icon {
+            width: 44px;
+            height: 44px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            flex-shrink: 0;
+        }
+
+        .stat-value {
+            font-size: 26px;
+            font-weight: 700;
+            color: #1e293b;
+            line-height: 1;
+            margin-top: 14px;
+        }
+
+        .stat-label {
+            font-size: 12px;
+            color: #94a3b8;
+            font-weight: 500;
+            margin-top: 4px;
+        }
+
+        /* ===== PROFILE CARD ===== */
+        .profile-card {
+            background: #fff;
+            border-radius: 16px;
+            border: 1px solid #f1f5f9;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+        }
+
+        .profile-cover {
+            height: 120px;
+            background: linear-gradient(135deg, #7c3aed, #a855f7, #ec4899);
+            border-radius: 16px 16px 0 0;
+        }
+
+        .profile-avatar-wrap {
+            padding: 0 24px;
+            margin-top: -40px;
+            margin-bottom: 12px;
+        }
+
+        .profile-avatar {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            border: 4px solid #fff;
+            object-fit: cover;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.12);
+        }
+
+        .profile-avatar-placeholder {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            border: 4px solid #fff;
+            background: linear-gradient(135deg, #7c3aed, #9333ea);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+            font-weight: 700;
+            color: #fff;
+            box-shadow: 0 4px 12px rgba(124,58,237,0.3);
+        }
+
+        .profile-name {
+            font-size: 18px;
+            font-weight: 700;
+            color: #1e293b;
+        }
+
+        .profile-email {
+            font-size: 13px;
+            color: #94a3b8;
+        }
+
+        .profile-about {
+            font-size: 13px;
+            color: #64748b;
+            line-height: 1.6;
+        }
+
+        /* ===== SUMMARY ===== */
+        .summary-card {
+            background: #fff;
+            border-radius: 16px;
+            border: 1px solid #f1f5f9;
+            padding: 24px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+        }
+
+            .summary-card h6 {
+                font-weight: 700;
+                color: #1e293b;
+                font-size: 14px;
+                margin-bottom: 16px;
+                padding-bottom: 10px;
+                border-bottom: 1px solid #f1f5f9;
+            }
+
+        .summary-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px 0;
+            font-size: 13px;
+        }
+
+            .summary-row:not(:last-child) {
+                border-bottom: 1px solid #f8fafc;
+            }
+
+        .summary-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            display: inline-block;
+            margin-right: 8px;
+        }
+
+        /* ===== FORM CARD ===== */
+        .form-card {
+            background: #fff;
+            border-radius: 16px;
+            border: 1px solid #f1f5f9;
+            padding: 28px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+        }
+
+            .form-card h6 {
+                font-weight: 700;
+                color: #1e293b;
+                font-size: 15px;
+                margin-bottom: 20px;
+                padding-bottom: 12px;
+                border-bottom: 1px solid #f1f5f9;
+            }
+
+        .form-label {
+            font-size: 13px;
+            font-weight: 500;
+            color: #64748b;
+            margin-bottom: 6px;
+        }
+
+        .form-control, .form-select {
+            border: 1.5px solid #e2e8f0 !important;
+            border-radius: 10px !important;
+            padding: 10px 14px !important;
+            font-size: 14px !important;
+            transition: all 0.2s;
+        }
+
+            .form-control:focus, .form-select:focus {
+                border-color: #8b5cf6 !important;
+                box-shadow: 0 0 0 3px rgba(124,58,237,0.1) !important;
+            }
+
+        .save-btn {
+            background: linear-gradient(135deg, #7c3aed, #9333ea) !important;
+            border: none !important;
+            border-radius: 50px !important;
+            padding: 10px 32px !important;
+            font-weight: 600 !important;
+            font-size: 14px !important;
+            color: #fff !important;
+            box-shadow: 0 4px 14px rgba(124,58,237,0.35);
+            transition: all 0.2s;
+        }
+
+            .save-btn:hover {
+                transform: translateY(-1px);
+                box-shadow: 0 6px 20px rgba(124,58,237,0.45);
+            }
+
+        /* ===== BACK BTN ===== */
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 13px;
+            font-weight: 500;
+            color: #64748b;
+            text-decoration: none;
+            padding: 6px 14px;
+            border: 1.5px solid #e2e8f0;
+            border-radius: 10px;
+            transition: all 0.2s;
+        }
+
+            .back-link:hover {
+                border-color: #8b5cf6;
+                color: #7c3aed;
+                background: #faf8ff;
+            }
+    </style>
+</head>
+<body>
+    <div class="wrapper">
+
+        <!-- HEADER -->
+        <header class="top-header">
+            <nav class="navbar navbar-expand">
+                <div class="left-topbar d-flex align-items-center">
+                    <img src="~/vertical/assets/images/logo-icon.png" width="32" alt="logo" class="ms-3" />
+                    <span class="logo-text ms-2">Syndash</span>
+                </div>
+                <div class="right-topbar ms-auto">
+                    <ul class="navbar-nav align-items-center gap-2">
+                        <li class="nav-item">
+                            <a class="nav-link" href="/Message/Inbox"><i class="bx bx-envelope" style="font-size:20px;color:#64748b;"></i></a>
+                        </li>
+                        <li class="nav-item dropdown dropdown-user-profile ms-2">
+                            <a class="nav-link dropdown-toggle dropdown-toggle-nocaret p-0" href="javascript:;" data-bs-toggle="dropdown">
+                                <div class="d-flex user-box align-items-center">
+                                    <div class="user-info text-end me-2">
+                                        <p class="user-name mb-0">@user?.Name @user?.Surname</p>
+                                        <p class="designattion mb-0">Çevrimiçi</p>
+                                    </div>
+                                    @if (!string.IsNullOrEmpty(user?.ImageUrl))
+                                    {
+                                        <img src="~/images/@user.ImageUrl" class="user-img" alt="kullanıcı" />
+                                    }
+                                    else
+                                    {
+
+                                        <img src="~/vertical/assets/images/avatars/avatar-1.png" class="user-img" alt="kullanıcı" />
+                                    }
+                                </div>
+                            </a>
+                            <div class="dropdown-menu dropdown-menu-end shadow-lg border-0" style="border-radius:12px;">
+                                <a class="dropdown-item py-2" href="/Profile/Index"><i class="bx bx-user me-2"></i>Profilim</a>
+                                <div class="dropdown-divider"></div>
+                                <a class="dropdown-item py-2 text-danger" href="/Login/Logout"><i class="bx bx-power-off me-2"></i>Çıkış Yap</a>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+        </header>
+
+        <div class="page-wrapper">
+            <div class="container-fluid" style="max-width:1200px;">
+
+                <!-- Başlık -->
+                <div class="d-flex align-items-center mb-4">
+                    <a href="/Message/Inbox" class="back-link me-3">
+                        <i class='bx bx-arrow-back'></i>Geri
+                    </a>
+                    <h4 class="mb-0 fw-bold" style="color:#1e293b;">Profilim</h4>
+                </div>
+
+                <!-- ===== STAT WİDGETLAR (EN ÜSTTE) ===== -->
+                <div class="row g-3 mb-4">
+                    <div class="col-6 col-md-3">
+                        <div class="stat-card purple">
+                            <div class="stat-icon" style="background:#ede9fe;">
+                                <i class='bx bx-envelope' style="color:#7c3aed;"></i>
+                            </div>
+                            <div class="stat-value">@ViewBag.TotalMessages</div>
+                            <div class="stat-label">Toplam Mesaj</div>
+                        </div>
+                    </div>
+                    <div class="col-6 col-md-3">
+                        <div class="stat-card blue">
+                            <div class="stat-icon" style="background:#dbeafe;">
+                                <i class='bx bx-send' style="color:#3b82f6;"></i>
+                            </div>
+                            <div class="stat-value">@ViewBag.TotalSent</div>
+                            <div class="stat-label">Gönderilen</div>
+                        </div>
+                    </div>
+                    <div class="col-6 col-md-3">
+                        <div class="stat-card green">
+                            <div class="stat-icon" style="background:#dcfce7;">
+                                <i class='bx bx-inbox' style="color:#22c55e;"></i>
+                            </div>
+                            <div class="stat-value">@ViewBag.TotalReceived</div>
+                            <div class="stat-label">Alınan</div>
+                        </div>
+                    </div>
+                    <div class="col-6 col-md-3">
+                        <div class="stat-card red">
+                            <div class="stat-icon" style="background:#fef2f2;">
+                                <i class='bx bx-envelope-open' style="color:#ef4444;"></i>
+                            </div>
+                            <div class="stat-value">@ViewBag.TotalUnread</div>
+                            <div class="stat-label">Okunmamış</div>
+                        </div>
+                    </div>
+                    <div class="col-6 col-md-3">
+                        <div class="stat-card amber">
+                            <div class="stat-icon" style="background:#fef9c3;">
+                                <i class='bx bxs-star' style="color:#f59e0b;"></i>
+                            </div>
+                            <div class="stat-value">@ViewBag.TotalStarred</div>
+                            <div class="stat-label">Yıldızlı</div>
+                        </div>
+                    </div>
+                    <div class="col-6 col-md-3">
+                        <div class="stat-card teal">
+                            <div class="stat-icon" style="background:#ccfbf1;">
+                                <i class='bx bx-briefcase' style="color:#14b8a6;"></i>
+                            </div>
+                            <div class="stat-value">@ViewBag.IsCount</div>
+                            <div class="stat-label">İş E-postası</div>
+                        </div>
+                    </div>
+                    <div class="col-6 col-md-3">
+                        <div class="stat-card pink">
+                            <div class="stat-icon" style="background:#fce7f3;">
+                                <i class='bx bx-home-heart' style="color:#ec4899;"></i>
+                            </div>
+                            <div class="stat-value">@ViewBag.AileCount</div>
+                            <div class="stat-label">Aile E-postası</div>
+                        </div>
+                    </div>
+                    <div class="col-6 col-md-3">
+                        <div class="stat-card slate">
+                            <div class="stat-icon" style="background:#f1f5f9;">
+                                <i class='bx bx-trash' style="color:#64748b;"></i>
+                            </div>
+                            <div class="stat-value">@ViewBag.TotalDeleted</div>
+                            <div class="stat-label">Silinen</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ===== PROFİL + FORM ===== -->
+                <div class="row g-4">
+
+                    <!-- SOL: Profil Kartı + Kategori Özeti -->
+                    <div class="col-lg-4">
+                        <div class="profile-card mb-4">
+                            <div class="profile-cover"></div>
+                            <div class="profile-avatar-wrap">
+                                @if (!string.IsNullOrEmpty(user?.ImageUrl))
+                                {
+                                    <img src="~/images/@user.ImageUrl" class="profile-avatar" alt="profil" />
+                                }
+                                else
+                                {
+
+                                    <div class="profile-avatar-placeholder">@avatarLetter</div>
+                                }
+                            </div>
+                            <div class="px-4 pb-4">
+                                <div class="profile-name">@user?.Name @user?.Surname</div>
+                                <div class="profile-email mb-3">@user?.Email</div>
+                                @if (!string.IsNullOrEmpty(user?.About))
+                                {
+                                    <div class="profile-about">@user.About</div>
+                                }
+                                else
+                                {
+
+                                    <div class="profile-about text-muted fst-italic">Henüz hakkımda bilgisi eklenmedi.</div>
+                                }
+                            </div>
+                        </div>
+
+                        <!-- Kategori Özeti -->
+                        <div class="summary-card">
+                            <h6><i class='bx bx-category me-2' style="color:#7c3aed;"></i>Kategoriler</h6>
+                            <div class="summary-row">
+                                <span><span class="summary-dot" style="background:#7c3aed;"></span>İş</span>
+                                <span class="fw-bold" style="color:#7c3aed;">@ViewBag.IsCount</span>
+                            </div>
+                            <div class="summary-row">
+                                <span><span class="summary-dot" style="background:#22c55e;"></span>Aile</span>
+                                <span class="fw-bold" style="color:#22c55e;">@ViewBag.AileCount</span>
+                            </div>
+                            <div class="summary-row">
+                                <span><span class="summary-dot" style="background:#ef4444;"></span>Eğitim</span>
+                                <span class="fw-bold" style="color:#ef4444;">@ViewBag.EgitimCount</span>
+                            </div>
+                            <div class="summary-row">
+                                <span><span class="summary-dot" style="background:#f59e0b;"></span>Sosyal</span>
+                                <span class="fw-bold" style="color:#f59e0b;">@ViewBag.SosyalCount</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- SAĞ: Form -->
+                    <div class="col-lg-8">
+                        <div class="form-card">
+                            <h6><i class='bx bx-user-edit me-2' style="color:#7c3aed;"></i>Bilgileri Güncelle</h6>
+
+                            @if (!ViewData.ModelState.IsValid)
+                            {
+                                <div class="alert alert-danger" style="border-radius:10px;font-size:13px;">
+                                    @foreach (var error in ViewData.ModelState.Values.SelectMany(v => v.Errors))
+                                    {
+                                        <div>@error.ErrorMessage</div>
+                                    }
+                                </div>
+                            }
+
+                            <form method="post" enctype="multipart/form-data">
+                                @Html.AntiForgeryToken()
+                                <div class="row g-3">
+                                    <div class="col-sm-6">
+                                        <label class="form-label">Ad</label>
+                                        <input type="text" class="form-control" asp-for="Name" placeholder="Adınız" />
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <label class="form-label">Soyad</label>
+                                        <input type="text" class="form-control" asp-for="Surname" placeholder="Soyadınız" />
+                                    </div>
+                                    <div class="col-12">
+                                        <label class="form-label">E-Posta</label>
+                                        <input type="email" class="form-control" asp-for="Email" placeholder="E-posta adresiniz" />
+                                    </div>
+                                    <div class="col-12">
+                                        <label class="form-label">Hakkımda</label>
+                                        <textarea class="form-control" asp-for="About" rows="3"
+                                                  placeholder="Kendinizden kısaca bahsedin..."></textarea>
+                                    </div>
+                                    <div class="col-12">
+                                        <label class="form-label">Profil Fotoğrafı</label>
+                                        <input type="file" class="form-control" asp-for="Image" accept="image/*" />
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <label class="form-label">Yeni Şifre <span class="text-muted">(boş bırakılırsa değişmez)</span></label>
+                                        <input type="password" class="form-control" asp-for="Password" placeholder="Yeni şifre" />
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <label class="form-label">Şifre Tekrar</label>
+                                        <input type="password" class="form-control" asp-for="ConfirmPassword" placeholder="Şifre tekrar" />
+                                    </div>
+                                    <div class="col-12 mt-2">
+                                        <button type="submit" class="save-btn btn">
+                                            <i class='bx bx-save me-2'></i>Kaydet
+                                        </button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <script src="~/vertical/assets/js/jquery.min.js"></script>
+    <script src="~/vertical/assets/js/bootstrap.bundle.min.js"></script>
+    <script src="~/vertical/assets/js/app.js"></script>
+</body>
+</html>
