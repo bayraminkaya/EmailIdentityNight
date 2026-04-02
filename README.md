@@ -52,23 +52,44 @@ ASP.NET Core MVC ve Identity kütüphanesi kullanılarak geliştirilmiş, tam ö
 ### Kayıt Sayfası
 ![Register](Project2EmailNight/Images/Ekran%20görüntüsü%202026-04-02%20164123.png)
 
-### E-Posta Doğrulama
+### Kullanım Koşulları ve Gizlilik Politikası
 ![Verify](Project2EmailNight/Images/Ekran%20görüntüsü%202026-04-02%20164137.png)
 
 ### Giriş Sayfası
 ![Login](Project2EmailNight/Images/Ekran%20görüntüsü%202026-04-02%20164157.png)
 
-### Gelen Kutusu
+### Şifremi Unuttum Sayfası
 ![Inbox](Project2EmailNight/Images/Ekran%20görüntüsü%202026-04-02%20164250.png)
 
-### Mesaj Detayı
+### Şifremi Unuttum Sayfası Başarı ile Mail gönderilmesi
 ![Detail](Project2EmailNight/Images/Ekran%20görüntüsü%202026-04-02%20164713.png)
 
-### Profil Sayfası
+### Şifre Sıfırlamasının Başarı ile Mail Kutusuna Gelmesi
 ![Profile](Project2EmailNight/Images/Ekran%20görüntüsü%202026-04-02%20164725.png)
 
-### Şifremi Unuttum
+### Gelen Kutusu
 ![ForgotPassword](Project2EmailNight/Images/Ekran%20görüntüsü%202026-04-02%20164811.png)
+
+### Gönderilenler Kutusu
+![ForgotPassword](Project2EmailNight/Images/Ekran%20görüntüsü%202026-04-02%20164831.png)
+
+### Kategoriler(Eğitim)
+![ForgotPassword](Project2EmailNight/Images/Ekran%20görüntüsü%202026-04-02%20164907.png)
+
+### Mail İçeriği Görüntüleme
+![ForgotPassword](Project2EmailNight/Images/Ekran%20görüntüsü%202026-04-02%20165031.png)
+
+### Yeni Mesaj Oluşturma
+![ForgotPassword](Project2EmailNight/Images/Ekran%20görüntüsü%202026-04-02%20165302.png)
+
+### Profilim Sayfası
+![ForgotPassword](Project2EmailNight/Images/Ekran%20görüntüsü%202026-04-02%20165353.png)
+
+### E Posta Doğrulama Sayfası
+![ForgotPassword](Project2EmailNight/Images/Ekran%20görüntüsü%202026-04-02%20165603.png)
+
+### E Posta Doğrulamanın Maile gelmesi
+![ForgotPassword](Project2EmailNight/Images/Ekran%20görüntüsü%202026-04-02%20165633.png)
 
 ---
 
